@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
 
 costs = []
-outputs = []
 
 def sigmoid(x):
     return 1.0/(1+ np.exp(-x))
@@ -32,7 +32,6 @@ class NeuralNetwork:
   def backprop(self):
     loss = np.power((self.output - self.y), 2)
     costs.append(np.mean(loss))
-    d_cost = (2*(self.y - self.output) * sigmoid_derivative(self.output))
     d_weights_2 = np.dot(self.layer1.T, (2*(self.y - self.output) * sigmoid_derivative(self.output)))
     d_weights_1 = np.dot(self.input.T,  (np.dot(2*(self.y - self.output) * sigmoid_derivative(self.output), self.weights_2.T) * sigmoid_derivative(self.layer1)))
     self.weights_1 += d_weights_1
@@ -42,7 +41,16 @@ class NeuralNetwork:
 X = np.array([[0,0,1], [0,1,1], [1,0,1], [1,1,1]])
 y = np.array([[0],[1],[1],[0]])
 
-n = 15000
+try:
+  n = int(input("How many iterations do what to perform?: "))
+except:
+  print('Required integer argument')
+  sys.exit()
+
+if n < 1 or n > 3000:
+  print('Argument between 1 and 3000 needed')
+  sys.exit()
+
 nn = NeuralNetwork(X,y)
 for i in range(n):
     nn.feedforward()
